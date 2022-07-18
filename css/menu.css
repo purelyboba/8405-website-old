@@ -1,7 +1,9 @@
 .menu-wrap {
     position: fixed;
     top: 0;
-    left: 0;
+    right: 63;
+    align-items: right;
+    justify-content: right;
     z-index: 1;
 }
 
