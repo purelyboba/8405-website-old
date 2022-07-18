@@ -39,10 +39,9 @@
             <h1>Build</h1>
         </div>
     </header>
-    <div class="15-inch">
-        <div id="threejs-container"></div>
+    <div id="robot-15-inch">
+        <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+        <model-viewer src="media/15inch-drive.glb" seamless-poster shadow-intensity="1" camera-controls enable-pan></model-viewer>
     </div>
-    <script src="three.js"></script>
-    <script src="15inch.js"></script>
 </body>
 </html>
