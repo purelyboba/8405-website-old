@@ -8,10 +8,13 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Akshar&family=Roboto&display=swap" rel="stylesheet">
-    <title>Millburn AI</title>
-    <link rel="icon" type="image/x-icon" href="/media/favicon.jpg">
+    <title>Build - Millburn AI</title>
+    <link rel="icon" type="image/x-icon" href="./media/favicon.jpg">
 </head>
 <body>
+    <div class="logo">
+        <a href="index.html"><img src="./media/roboticslogowhite.png" alt="Millburn AI"></a>
+    </div>
     <div class="menu-wrap">
         <input type="checkbox" class="toggler">
         <div class="hamburger">
@@ -36,13 +39,12 @@
     <header class="splash">
         <div class="splash-img"></div>
         <div class="splash-inner">
-            <h1>Build</h1>
+            <h1>BUILD</h1>
         </div>
     </header>
-    <div class="15-inch">
-        <div id="threejs-container"></div>
+    <div id="robot-15-inch">
+        <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+        <model-viewer src="media/15inch-drive.glb" seamless-poster shadow-intensity="1" camera-controls enable-pan></model-viewer>
     </div>
-    <script src="three.js"></script>
-    <script src="15inch.js"></script>
 </body>
 </html>

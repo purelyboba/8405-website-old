@@ -1,3 +1,8 @@
+@font-face {
+    font-family: "Quantum";
+    src: url("../media/Quantumfixed.ttf");
+}
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -7,6 +12,17 @@
 body {
     font-family: 'Roboto', sans-serif;
     line-height: 1.6;
+}
+
+.logo {
+    background-color: transparent;
+}
+
+.logo > a > img {
+    width: 6rem;
+    margin-left: 7px;
+    margin-top: 3px;
+    position: fixed;
 }
 
 .splash {
@@ -38,6 +54,10 @@ body {
     flex-direction: column;
 }
 
+.splash-inner h1 {
+    font-family: "Quantum";
+}
+
 .splash-inner .button {
     background-color: transparent;
     border: 1px solid white;
@@ -53,8 +73,16 @@ body {
     color: black;
 }
 
-#threejs-container {
+#robot-15-inch {
     width: 100%;
     height: 100%;
-    background-color: black;
+    background-color: white;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+#robot-15-inch > model-viewer {
+    width: 100%;
+    height: 100%;
 }
