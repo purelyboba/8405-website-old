@@ -3,6 +3,11 @@
     src: url("../media/Quantumfixed.ttf");
 }
 
+@font-face {
+  font-family: 'Brolink';
+  src: url('../media/Brolink.otf') format('opentype')
+}
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -55,7 +60,7 @@ body {
 }
 
 .splash-inner h1 {
-    font-family: "Quantum";
+    font-family: "Brolink";
 }
 
 .splash-inner .button {
