@@ -69,13 +69,22 @@ body {
   text-decoration: none;
   color: white;
   padding: 0.5rem;
-  margin: 1rem;
   transition: all 0.4s ease;
+  margin: 1rem;
+  cursor: pointer;
 }
 
 .splash-inner .button:hover {
   background-color: white;
   color: black;
+}
+
+a.invis {
+  transform: scale(0);
+}
+
+a.back {
+  transform: scale(1);
 }
 
 #robot-15-inch {

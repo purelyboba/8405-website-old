@@ -1,4 +1,4 @@
-nav = document.getElementById("nav");
+const nav = document.getElementById("nav");
 nav.innerHTML = `
     <div class="menu-wrap">
       <input type="checkbox" class="toggler" />
