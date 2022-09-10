@@ -1,43 +1,54 @@
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/menu.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Akshar&family=Roboto&display=swap"
+      rel="stylesheet"
+    />
 
-<head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="css/style.css" />
-  <link rel="stylesheet" href="css/menu.css" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Akshar&family=Roboto&display=swap" rel="stylesheet" />
+    <title>Build - Millburn AI</title>
+    <link rel="icon" type="image/x-icon" href="./media/favicon.jpg" />
+  </head>
 
-
-  <title>Build - Millburn AI</title>
-  <link rel="icon" type="image/x-icon" href="./media/favicon.jpg" />
-</head>
-
-<body>
-  <div class="logo">
-    <a href="index.html"><img src="./media/roboticslogowhite.png" alt="Millburn AI" /></a>
-  </div>
-
-  <nav>
-    <div id="nav"></div>
-  </nav>
-
-  <header class="splash">
-    <div class="splash-img"></div>
-    <div class="splash-inner">
-      <h1>BUILD</h1>
+  <body>
+    <div class="logo">
+      <a href="index.html"
+        ><img src="./media/roboticslogowhite.png" alt="Millburn AI"
+      /></a>
     </div>
-  </header>
-  <main>
-    <div id="robot-15-inch">
-      <model-viewer src="media/15inch-drive.glb" seamless-poster shadow-intensity="1" camera-controls enable-pan>
-      </model-viewer>
-    </div>
-  </main>
-  <script src="./js/script.js"></script>
-  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
-</body>
 
+    <nav>
+      <div id="nav"></div>
+    </nav>
+
+    <header class="splash">
+      <div class="splash-img"></div>
+      <div class="splash-inner">
+        <h1>BUILD</h1>
+      </div>
+    </header>
+    <main>
+      <div id="robot-15-inch">
+        <model-viewer
+          src="media/15inch-drive.glb"
+          seamless-poster
+          shadow-intensity="1"
+          camera-controls
+          enable-pan
+        >
+        </model-viewer>
+      </div>
+    </main>
+    <script src="./js/script.js"></script>
+    <script
+      type="module"
+      src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"
+    ></script>
+  </body>
 </html>
