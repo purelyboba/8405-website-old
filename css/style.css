@@ -24,9 +24,9 @@ body {
 }
 
 .logo > a > img {
-  width: 6rem;
-  margin-left: 7px;
-  margin-top: 3px;
+  width: 3rem;
+  margin-left: 15px;
+  margin-top:15px;
   position: fixed;
 }
 

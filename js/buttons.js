@@ -8,7 +8,7 @@ async function popup() {
   learnmore.classList.add("invis");
   popup2();
   await new Promise((r) => setTimeout(r, 200));
-  learnmore.innerText = "Our Team";
+  learnmore.innerText = "About Us";
   learnmore.classList.remove("invis");
   learnmore.href = "about.html";
 }
