@@ -11,6 +11,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Akshar&family=Roboto&display=swap" rel="stylesheet" />
   <title>Code</title>
   <link rel="icon" type="image/x-icon" href="./media/favicon.png" />
+  <link rel="stylesheet" href="assets/prism.css">
 </head>
 
 <body>
@@ -26,12 +27,209 @@
     <div class="splash-img"></div>
     <div class="splash-inner">
       <h1>CODE</h1>
+      <a class="button" href="https://github.com/SaazM/8405FTC" target="_blank">Github</a>
     </div>
   </header>
 
-  <main></main>
+  <main>
+    <article>
+      <section id="overview">
+        <div class="container-overview">
+          <h1>Overview - Code</h1>
+          <ul>
+            <li><strong>Java</strong> in Android Studio</li>
+            <li>Robot setup - 1 Rev Hub, 1 Rev Driver Station, 1 Rev Expansion Hub</li>
+            <li>Our code is split up into different components, with each component being worked on separately and by different people at different stages of development.</li>
+            <ul>
+              <li><a href="#drive">Drive</a></li>
+              <li>Odometry</li>
+              <li>PID</li>
+              <li>Auton (Autonomous)</li>
+              <li><a href="#cv">CV (Computer Vision)</a></li>
+            </ul>
+          </ul>
+        </div>
+      </section>
+
+      <section id="overview">
+        <div class="container-drive" id="drive">
+          <h1>Drive component</h1>
+
+          <ul>
+          <li>A Mecanum drive uses special wheels with "rollers" angled at a 45 degree angle.</li>
+          <img src="assets/mecanum.jpg"></img>
+          <li>These rollers, when implemented properly, allows for <i>holonomic movement</i> - the ability to move in any direction while rotating. Refer to the below image for using a Mecanum drive.</li>
+          <img src="assets/mecanum_chart.png"></img>
+          </ul>
+
+          <p>Let's take a look at the code.</p>
+
+<pre><code class="language-java">// IMPORTS UP HERE
+
+/* Initialize our drive motors */
+DcMotor motorFrontLeft;
+DcMotor motorBackLeft;
+DcMotor motorFrontRight;
+DcMotor motorBackRight;
+
+public void mecanum(double power, double strafe, double turn) {
+  // Denominator is the value of the largest power output from the motors (absolute value) OR 1
+  // Ensures all powers maintain in the same ratio for a smooth drive
+  // Keeps drive power output within control of range [-1, 1]
+  double denominator = Math.max(Math.abs(power) + Math.abs(strafe) + Math.abs(turn), 1);
+  double frontLeftPower = (power + strafe + turn) / denominator;
+  double backLeftPower = (power - strafe + turn) / denominator;
+  double frontRightPower = (power - strafe - turn) / denominator;
+  double backRightPower = (power + strafe - turn) / denominator;
+
+  // Run motors based on calculated power outputs
+  motorFrontLeft.setPower(frontLeftPower);
+  motorBackLeft.setPower(backLeftPower);
+  motorFrontRight.setPower(frontRightPower);
+  motorBackRight.setPower(backRightPower);
+}
+</code></pre>
+
+        <p><i>** Remember this code is for a ROBOT-CENTRIC drive!</i></p>
+        <p>So, what's the difference between a Robot-centric and Field-centric drive?</p>
+        <img src="assets/centric.png" class="white-bg">
+        <p class="center">Credit to team 6624 for the image</p>
+
+        <p>Here's our code for a Field-centric drive</p>
+<pre><code class="language-java">public void fieldCentric(double power, double strafe, double turn) {
+  // We're using an IMU to measure the heading of the bot in order to counteract it in a Field-centric drive
+  double botHeading = -imu.getAngularOrientation().firstAngle;
+  // Slightly more complex trigonometry in order to account for the bot's variable heading
+  double rotationX = strafe * Math.cos(botHeading) - power * Math.sin(botHeading);
+  double rotationY = strafe * Math.sin(botHeading) + power * Math.cos(botHeading);
+  double denominator = Math.max(Math.abs(power) + Math.abs(strafe) + Math.abs(turn), 1);
+  double frontLeftPower = (rotationY + rotationX + turn) / denominator;
+  double backLeftPower = (rotationY - rotationX + turn) / denominator;
+  double frontRightPower = (rotationY - rotationX - turn) / denominator;
+  double backRightPower = (rotationY + rotationX - turn) / denominator;
+
+  motorFrontLeft.setPower(frontLeftPower);
+  motorBackLeft.setPower(backLeftPower);
+  motorFrontRight.setPower(frontRightPower);
+  motorBackRight.setPower(backRightPower);
+}
+</code></pre>
+
+        <p>We were able to create a macro on the controller that toggled between both modes at the driver's will.</p>
+<pre><code class="language-java">if(gamepad1.right_bumper) {
+    drive.isFieldCentric = !drive.isFieldCentric;
+}
+
+if(drive.isFieldCentric) {
+    drive.fieldCentric(power, strafe, turn);
+}
+
+else {
+    drive.mecanum(power, strafe, turn);
+}
+</code></pre>
+        </div>
+      </section>
+
+
+      <section id="overview">
+        <div class="container-cv" id="cv">
+          <h1>CV (Computer Vision) Component</h1>
+
+          <ul>
+            <li><p>CV is essential to our robot. We use <i>easyopencv</i> and a generic webcam in order to gain points on the custom-sleeve signal code task. CV will also help in later competitions when we integrate it with an ML model that will help the bot be more accurate with lining up with cones/beacons</p></li>
+
+            <li><p>Our current CV code has two parts - a <i>setup</i> and a <i>Pipeline.</i> The Pipeline is the real "meat" of the code, so that's what we focused on.</p></li>
+            <li><p>The first method in our Pipeline is <code>processFrame()</code>. This of this as a <code>main</code> function that gets called every frame.</p></li>
+<pre><code class="language-java">Mat mat = new Mat();
+// ROI is the rectangle of vision that the camera sees (our camera is in 320x240 res)
+final Rect ROI = new Rect(new Point(0, 0), new Point(320, 240));
+
+@Override
+public Mat processFrame(Mat input)
+{
+  // Process and filter the input image. This isn't as important since we're not streaming the output of the camera to anything.
+  Imgproc.rectangle(
+          input,
+          new Point(
+                  input.cols()/4.0,
+                  input.rows()/4.0),
+          new Point(
+                  input.cols()*(3f/4f),
+                  input.rows()*(3f/4f)),
+          new Scalar(0, 255, 0), 4);
+
+  // getColor is our color detection function for detecting the color of the custom-sleeve task.
+  getColor(input);
+  return input;
+}
+</code></pre>
+          </ul>
+
+          <ul>
+            <li>For the custom-sleeve task, it is required that the robot "see" which color / image is being displayed on the cone and then park accordingly to that information. To simplify things, we designed custom images that were just solid neon colors. This would make the colors stand out and easy to spot with CV.</li>
+            <li>In order to match the color that the camera sees with the closest actual color on the sleeve, we visualize (r, g, b) values as a vector of (x, y, z) on a 3-D space.</li>
+            <li>The MSE (Mean Squared Error) is then calculated using the actual "correct" colors on the sleeve and the colors that the camera sees.</li>
+            <li>The color that the camera sees with the lowest MSE is most likely the correct color that the camera is looking at.</li>
+          </ul>
+<pre><code class="language-java">/* getColor is for taking in camera inputs and running the input through the MSE function */
+public void getColor(Mat input) {
+    // Array for the colors that the CAMERA sees
+    int[] camValues = new int[3];
+
+    // read from input matrix and convert to readable RGB values
+    Mat coneRegion = input.submat(ROI);
+    camValues[0] = (int) Core.sumElems(coneRegion).val[0] / (int) ROI.area();
+    camValues[1] = (int) Core.sumElems(coneRegion).val[1] / (int) ROI.area();
+    camValues[2] = (int) Core.sumElems(coneRegion).val[2] / (int) ROI.area();
+    // display the colors that the camera sees to telemetry
+    String colorString = camValues[0] + ", " + camValues[1] + ", " + camValues[2];
+    telemetry.addData("Color: ", colorString);
+
+    // Run MSE the values that the camera sees
+    String colorName = MSE(camValues);
+    telemetry.addData("Color_Name: ", colorName);
+
+    coneRegion.release();
+}
+
+/* MSE() is where most of the math occurs */
+public String MSE(int[] colors) {
+    // Constant values for the colors on our custom-sleeve
+    int[][] coneColorValues = {{255, 165, 0}, {135, 206, 235}, {255, 0, 255}};
+    // in order orange, teal, pink ^^^^^^^
+
+    // array for differences through MSE (camera color comapared to each of the three custom-sleeve colors)
+    int[] diffs = new int[3];
+
+    // iterate through R, G, and B and calculate MSE value for each
+    for (int i = 0; i < 3; i++) {
+  //                int rDiff = (coneColorValues[i][0] - camValues[0]) * (coneColorValues[i][0] - camValues[0]);
+        int rDiff = (int) Math.pow(coneColorValues[i][0] - camValues[0], 2);
+  //                int gDiff = (coneColorValues[i][1] - camValues[1]) * (coneColorValues[i][1] - camValues[1]);
+        int gDiff = (int) Math.pow(coneColorValues[i][1] - camValues[0], 2);
+  //                int bDiff = (coneColorValues[i][2] - camValues[2]) * (coneColorValues[i][2] - camValues[2]);
+        int bDiff = (int) Math.pow(coneColorValues[i][2] - camValues[0], 2);
+        diffs[i] = rDiff + gDiff + bDiff;
+    }
+
+    String diffsString = diffs[0] + ", " + diffs[1] + ", " + diffs[2];
+    telemetry.addData("diffs: ", diffsString);
+
+    // logic to decide the actual color
+    if (diffs[1] < diffs[2] && diffs[1] < diffs[0]) { return "teal"; }
+    else if (diffs[2] < diffs[0]) { return "pink"; }
+    else { return "orange"; }
+}
+</code></pre>
+
+        </div>
+      </section>
+    </article>
+  </main>
 
   <script src="./js/script.js"></script>
+  <script src="assets/prism.js"></script>
 </body>
 
 </html>
