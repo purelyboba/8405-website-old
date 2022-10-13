@@ -41,6 +41,10 @@
   margin: 0;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 body {
   font-family: var(--body);
   font-size: 1.35rem;
@@ -97,7 +101,7 @@ body {
   border: 1px solid white;
   text-decoration: none;
   color: white;
-  padding: 8px 7rem;
+  padding: 0 7rem;
   transition: all 0.4s ease;
   margin: 1rem;
   cursor: pointer;
@@ -238,4 +242,8 @@ img {
   text-align: center;
   font-size: 16px;
   margin-top: 0.5vh;
+}
+
+main a {
+    color: var(--nord9);
 }
