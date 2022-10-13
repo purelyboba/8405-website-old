@@ -43,8 +43,8 @@
 
 body {
   font-family: var(--body);
-  font-size: 2rem;
-  line-height: 3.5rem;
+  font-size: 1.35rem;
+  line-height: 3rem;
   background-color: var(--bg);
 }
 
@@ -97,7 +97,7 @@ body {
   border: 1px solid white;
   text-decoration: none;
   color: white;
-  padding: 1rem 7rem;
+  padding: 8px 7rem;
   transition: all 0.4s ease;
   margin: 1rem;
   cursor: pointer;
