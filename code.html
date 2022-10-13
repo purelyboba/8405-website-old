@@ -174,15 +174,19 @@ public Mat processFrame(Mat input)
           </ul>
 <pre><code class="language-java">/* getColor is for taking in camera inputs and running the input through the MSE function */
 public void getColor(Mat input) {
+    // Array for the colors that the CAMERA sees
     int[] camValues = new int[3];
 
+    // read from input matrix and convert to readable RGB values
     Mat coneRegion = input.submat(ROI);
     camValues[0] = (int) Core.sumElems(coneRegion).val[0] / (int) ROI.area();
     camValues[1] = (int) Core.sumElems(coneRegion).val[1] / (int) ROI.area();
     camValues[2] = (int) Core.sumElems(coneRegion).val[2] / (int) ROI.area();
+    // display the colors that the camera sees to telemetry
     String colorString = camValues[0] + ", " + camValues[1] + ", " + camValues[2];
     telemetry.addData("Color: ", colorString);
 
+    // Run MSE the values that the camera sees
     String colorName = MSE(camValues);
     telemetry.addData("Color_Name: ", colorName);
 
@@ -191,11 +195,14 @@ public void getColor(Mat input) {
 
 /* MSE() is where most of the math occurs */
 public String MSE(int[] colors) {
+    // Constant values for the colors on our custom-sleeve
     int[][] coneColorValues = {{255, 165, 0}, {135, 206, 235}, {255, 0, 255}};
     // in order orange, teal, pink ^^^^^^^
 
+    // array for differences through MSE (camera color comapared to each of the three custom-sleeve colors)
     int[] diffs = new int[3];
 
+    // iterate through R, G, and B and calculate MSE value for each
     for (int i = 0; i < 3; i++) {
   //                int rDiff = (coneColorValues[i][0] - camValues[0]) * (coneColorValues[i][0] - camValues[0]);
         int rDiff = (int) Math.pow(coneColorValues[i][0] - camValues[0], 2);
@@ -209,6 +216,7 @@ public String MSE(int[] colors) {
     String diffsString = diffs[0] + ", " + diffs[1] + ", " + diffs[2];
     telemetry.addData("diffs: ", diffsString);
 
+    // logic to decide the actual color
     if (diffs[1] < diffs[2] && diffs[1] < diffs[0]) { return "teal"; }
     else if (diffs[2] < diffs[0]) { return "pink"; }
     else { return "orange"; }
