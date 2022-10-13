@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans&family=Plus+Jakarta+Sans&display=swap');
+
 @font-face {
   font-family: "Quantum";
   src: url("../media/Quantumfixed.ttf");
@@ -8,15 +10,42 @@
   src: url("../media/brolink.otf") format("opentype");
 }
 
+
+:root {
+  --highlight: #0099f0;
+  --bg: #0C0C0A;
+  --gray: $727171;
+  --head: 'Josefin Sans', sans-serif;
+  --body: 'Plus Jakarta Sans', sans-serif;
+
+  --nord0: #2e3440;
+  --nord1: #3b4252;
+  --nord2: #434c5e;
+  --nord3: #4c566a;
+  --nord4: #d8dee9;
+  --nord5: #e5e9f0;
+  --nord6: #eceff4;
+  --nord7: #8fbcbb;
+  --nord8: #88c0d0;
+  --nord9: #81a1c1;
+  --nord10: #5e81ac;
+  --nord11: #bf616a;
+  --nord12: #d08770;
+  --nord13: #ebcb8b;
+  --nord14: #a3be8c;
+  --nord15: #b48ead;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
-  padding: 0;
 }
 
 body {
-  font-family: "Roboto", sans-serif;
-  line-height: 1.6;
+  font-family: var(--body);
+  font-size: 2rem;
+  line-height: 3.5rem;
+  background-color: var(--bg);
 }
 
 .logo {
@@ -68,7 +97,7 @@ body {
   border: 1px solid white;
   text-decoration: none;
   color: white;
-  padding: 0.5rem;
+  padding: 1rem 7rem;
   transition: all 0.4s ease;
   margin: 1rem;
   cursor: pointer;
@@ -87,17 +116,126 @@ a.back {
   transform: scale(1);
 }
 
-#robot-15-inch {
-  width: 100%;
-  height: 100%;
-  background-color: white;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  padding: 5vh;
+/********** MAIN /**********/
+
+main {
+  background-color: var(--bg);
+  color: white;
+  margin-left: 4vh;
+  margin-right: 4vh;
+  margin-bottom: 10vh;
+  margin-top: 2vh;
 }
 
-#robot-15-inch > model-viewer {
-  width: 100%;
-  height: 100%;
+
+main h1 {
+  text-align: center;
+  font-size: 4rem;
+  font-family: var(--head);
+}
+
+main h3 {
+  font-size: 2rem;
+  font-family: var(--head);
+  text-decoration: underline;
+  margin-bottom: 1vh;
+}
+
+main p {
+}
+
+section {
+  background-color: var(--nord0);
+}
+
+section .container-overview {
+  background:
+    linear-gradient(to right, var(--nord11) 10px, transparent 10px) 0 0,
+    linear-gradient(to right, var(--nord11) 10px, transparent 10px) 0 100%,
+    linear-gradient(to left, var(--nord11) 10px, transparent 10px) 100% 0,
+    linear-gradient(to left, var(--nord11) 10px, transparent 10px) 100% 100%,
+    linear-gradient(to bottom, var(--nord11) 10px, transparent 10px) 0 0,
+    linear-gradient(to bottom, var(--nord11) 10px, transparent 10px) 100% 0,
+    linear-gradient(to top, var(--nord11) 10px, transparent 10px) 0 100%,
+    linear-gradient(to top, var(--nord11) 10px, transparent 10px) 100% 100%;
+
+  background-repeat: no-repeat;
+  background-size: 45px 45px;
+  padding: 0 2em;
+  margin-bottom: 2em;
+  padding-top: 3em;
+  padding-bottom: 3em;
+}
+
+section .container-overview h1,
+section .container-overview h3 {
+  color: var(--nord11);
+}
+
+section .container-drive {
+  background:
+    linear-gradient(to right, var(--nord12) 10px, transparent 10px) 0 0,
+    linear-gradient(to right, var(--nord12) 10px, transparent 10px) 0 100%,
+    linear-gradient(to left, var(--nord12) 10px, transparent 10px) 100% 0,
+    linear-gradient(to left, var(--nord12) 10px, transparent 10px) 100% 100%,
+    linear-gradient(to bottom, var(--nord12) 10px, transparent 10px) 0 0,
+    linear-gradient(to bottom, var(--nord12) 10px, transparent 10px) 100% 0,
+    linear-gradient(to top, var(--nord12) 10px, transparent 10px) 0 100%,
+    linear-gradient(to top, var(--nord12) 10px, transparent 10px) 100% 100%;
+
+  background-repeat: no-repeat;
+  background-size: 45px 45px;
+  padding: 0 2em;
+  margin-bottom: 2em;
+  padding-top: 3em;
+  padding-bottom: 3em;
+}
+section .container-drive h1,
+section .container-drive h3 {
+  color: var(--nord12);
+}
+
+
+section .container-cv {
+  background:
+    linear-gradient(to right, var(--nord8) 10px, transparent 10px) 0 0,
+    linear-gradient(to right, var(--nord8) 10px, transparent 10px) 0 100%,
+    linear-gradient(to left, var(--nord8) 10px, transparent 10px) 100% 0,
+    linear-gradient(to left, var(--nord8) 10px, transparent 10px) 100% 100%,
+    linear-gradient(to bottom, var(--nord8) 10px, transparent 10px) 0 0,
+    linear-gradient(to bottom, var(--nord8) 10px, transparent 10px) 100% 0,
+    linear-gradient(to top, var(--nord8) 10px, transparent 10px) 0 100%,
+    linear-gradient(to top, var(--nord8) 10px, transparent 10px) 100% 100%;
+
+  background-repeat: no-repeat;
+  background-size: 45px 45px;
+  padding: 0 2em;
+  margin-bottom: 2em;
+  padding-top: 3em;
+  padding-bottom: 3em;
+}
+section .container-cv h1,
+section .container-cv h3 {
+  color: var(--nord8);
+}
+
+
+
+img {
+  width: 30%;
+  text-align: center;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 1vh;
+}
+
+.white-bg {
+  background-color: white;
+}
+
+.center {
+  text-align: center;
+  font-size: 16px;
+  margin-top: 0.5vh;
 }
