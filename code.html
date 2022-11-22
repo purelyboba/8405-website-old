@@ -137,91 +137,57 @@ else {
           <h1>CV (Computer Vision) Component</h1>
 
           <ul>
-            <li><p>CV is essential to our robot. We use <i>easyopencv</i> and a generic webcam in order to gain points on the custom-sleeve signal code task. CV will also help in later competitions when we integrate it with an ML model that will help the bot be more accurate with lining up with cones/beacons</p></li>
+            <li><p>CV is essential to our robot. We use <a href="https://github.com/OpenFTC/EOCV-AprilTag-Plugin">AprilTags (think QR codes)</a> in order to gain points on the custom-sleeve signal code task. We are planning to utilize the cameras even more later on in the season, but we're not sure how to go about doing it yet.</p></li>
+            <li>
+              <p>ApriTags are just special QR-code-esque images that can be easily determined by a camera regardless of orientation. These tags are also robust and reliable even at differing lighting conditions and distances. This reliability is one of the main reasons we used AprilTags over solid colors, since colors could change a lot based on the competition location.</p>
+            </li>
+            <li>
+              <p>EasyOpenCV and AprilTags makes the CV process orders of magnitude easier. All we had to do was to manually calibrate the camera constants <code>fx, fy, cx, cy</code> for our camera.</p>
+            </li>
+            <li>
+              <p>Then, it was just a simple process of running our camera through a preset AprilTags pipleline.</p>
+            </li>
 
-            <li><p>Our current CV code has two parts - a <i>setup</i> and a <i>Pipeline.</i> The Pipeline is the real "meat" of the code, so that's what we focused on.</p></li>
-            <li><p>The first method in our Pipeline is <code>processFrame()</code>. This of this as a <code>main</code> function that gets called every frame.</p></li>
-<pre><code class="language-java">Mat mat = new Mat();
-// ROI is the rectangle of vision that the camera sees (our camera is in 320x240 res)
-final Rect ROI = new Rect(new Point(0, 0), new Point(320, 240));
-
-@Override
-public Mat processFrame(Mat input)
+          </ul>
+<pre><code class="language-java">
+// ...
+final int ID_LEFT = 1;
+final int ID_MIDDLE = 0;
+final int ID_RIGHT = 2;
+// ...
+public void search()
 {
-  // Process and filter the input image. This isn't as important since we're not streaming the output of the camera to anything.
-  Imgproc.rectangle(
-          input,
-          new Point(
-                  input.cols()/4.0,
-                  input.rows()/4.0),
-          new Point(
-                  input.cols()*(3f/4f),
-                  input.rows()*(3f/4f)),
-          new Scalar(0, 255, 0), 4);
+    ArrayList&lt;AprilTagDetection&gt; currentDetections = aprilTagDetect.getLatestDetections();
+    if (currentDetections.size() != 0)
+    {
+        boolean tagFound = false;
+        for (AprilTagDetection tag : currentDetections)
+        {
+            if (tag.id == ID_LEFT || tag.id == ID_MIDDLE || tag.id == ID_RIGHT) {
 
-  // getColor is our color detection function for detecting the color of the custom-sleeve task.
-  getColor(input);
-  return input;
-}
-</code></pre>
-          </ul>
 
-          <ul>
-            <li>For the custom-sleeve task, it is required that the robot "see" which color / image is being displayed on the cone and then park accordingly to that information. To simplify things, we designed custom images that were just solid neon colors. This would make the colors stand out and easy to spot with CV.</li>
-            <li>In order to match the color that the camera sees with the closest actual color on the sleeve, we visualize (r, g, b) values as a vector of (x, y, z) on a 3-D space.</li>
-            <li>The MSE (Mean Squared Error) is then calculated using the actual "correct" colors on the sleeve and the colors that the camera sees.</li>
-            <li>The color that the camera sees with the lowest MSE is most likely the correct color that the camera is looking at.</li>
-          </ul>
-<pre><code class="language-java">/* getColor is for taking in camera inputs and running the input through the MSE function */
-public void getColor(Mat input) {
-    // Array for the colors that the CAMERA sees
-    int[] camValues = new int[3];
-
-    // read from input matrix and convert to readable RGB values
-    Mat coneRegion = input.submat(ROI);
-    camValues[0] = (int) Core.sumElems(coneRegion).val[0] / (int) ROI.area();
-    camValues[1] = (int) Core.sumElems(coneRegion).val[1] / (int) ROI.area();
-    camValues[2] = (int) Core.sumElems(coneRegion).val[2] / (int) ROI.area();
-    // display the colors that the camera sees to telemetry
-    String colorString = camValues[0] + ", " + camValues[1] + ", " + camValues[2];
-    telemetry.addData("Color: ", colorString);
-
-    // Run MSE the values that the camera sees
-    String colorName = MSE(camValues);
-    telemetry.addData("Color_Name: ", colorName);
-
-    coneRegion.release();
-}
-
-/* MSE() is where most of the math occurs */
-public String MSE(int[] colors) {
-    // Constant values for the colors on our custom-sleeve
-    int[][] coneColorValues = {{255, 165, 0}, {135, 206, 235}, {255, 0, 255}};
-    // in order orange, teal, pink ^^^^^^^
-
-    // array for differences through MSE (camera color comapared to each of the three custom-sleeve colors)
-    int[] diffs = new int[3];
-
-    // iterate through R, G, and B and calculate MSE value for each
-    for (int i = 0; i < 3; i++) {
-  //                int rDiff = (coneColorValues[i][0] - camValues[0]) * (coneColorValues[i][0] - camValues[0]);
-        int rDiff = (int) Math.pow(coneColorValues[i][0] - camValues[0], 2);
-  //                int gDiff = (coneColorValues[i][1] - camValues[1]) * (coneColorValues[i][1] - camValues[1]);
-        int gDiff = (int) Math.pow(coneColorValues[i][1] - camValues[0], 2);
-  //                int bDiff = (coneColorValues[i][2] - camValues[2]) * (coneColorValues[i][2] - camValues[2]);
-        int bDiff = (int) Math.pow(coneColorValues[i][2] - camValues[0], 2);
-        diffs[i] = rDiff + gDiff + bDiff;
+                tagOfInterest = tag;
+                int temp = tag.id+1;
+                if (temp == 1)
+                {
+                    temp = 2;
+                }
+                else if (temp==2) {temp=1; }
+                tm.addData("Tag of interest is in sight!\n\nparking:", temp);
+                tagFound = true;
+                break;
+            }
+        }
     }
-
-    String diffsString = diffs[0] + ", " + diffs[1] + ", " + diffs[2];
-    telemetry.addData("diffs: ", diffsString);
-
-    // logic to decide the actual color
-    if (diffs[1] < diffs[2] && diffs[1] < diffs[0]) { return "teal"; }
-    else if (diffs[2] < diffs[0]) { return "pink"; }
-    else { return "orange"; }
+    // There's some more code down here to handle expections, but that's a bit too long for this snippet.
+    tm.update();
 }
 </code></pre>
+        <ul>
+         <li>
+            <p>Essentially, we have the camera scan for one of three <code>ID</code> numbers. If the ID matches up with a predetermined number for our three AprilTags on the sleeve, we know which ApriTag the camera has seen, thus calling a specific function to park in the correct location.</p>
+         </li>
+         </ul>
 
         </div>
       </section>
